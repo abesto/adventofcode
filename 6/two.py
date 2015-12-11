@@ -19,7 +19,6 @@ def parse_line(line):
 
 field = [[False] * 1000 for n in xrange(10000)]
 
-
 with open('input', 'r') as f:
     for line in f:
         op, from_row, from_column, to_row, to_column = parse_line(line)
@@ -27,10 +26,8 @@ with open('input', 'r') as f:
             for column in xrange(from_column, to_column + 1):
                 field[row][column] = op(field[row][column])
 
-
 result = 0
 for row in field:
     result += sum(row)
-
 
 print result
