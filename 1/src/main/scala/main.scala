@@ -49,6 +49,7 @@ object One {
         // We just moved
         val touchedNow = 1.to(state.distance).map(state.position + state.heading * _)
         for (pos <- touchedNow) {
+          // This would break if going in a straight line could hit the same point twice. For example if our plane was on a sphere.
           if (touched.contains(pos)) {
             println(math.abs(pos.x) + math.abs(pos.y))
             return
