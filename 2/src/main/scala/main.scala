@@ -15,27 +15,27 @@ object Two {
     def +(v: Vector) = Vector(x + v.x, y + v.y)
   }
 
-  case class State(position: Vector, code: Seq[Char] = Seq())(implicit keypad: Keypad) {
+  case class State(position: Vector, code: Seq[Char] = Seq())(implicit val keypad: Keypad) {
     def value = keypad(position)
-    def move(v: Vector) = {
-      val newPosition = position + v
-      if (keypad.isValid(newPosition)) {
-        State(newPosition, code)
-      } else {
-        State(position, code)
-      }
-    }
-    def press = State(position, code :+ value)
     def apply(t: (State) => State) = t(this)
   }
 
-  def move(v: Vector)(s: State) = s.move(v)
+  def move(v: Vector)(s: State) = {
+    val newPosition = s.position + v
+    implicit val keypad = s.keypad
+    if (s.keypad.isValid(newPosition)) {
+      State(newPosition, s.code)
+    } else {
+      State(s.position, s.code)
+    }
+  }
+
   val up = move(Vector(0, -1))(_)
   val left = move(Vector(-1, 0))(_)
   val down = move(Vector(0, 1))(_)
   val right = move(Vector(1, 0))(_)
 
-  def press(s: State) = s.press
+  def press(s: State) = State(s.position, s.code :+ s.value)(s.keypad)
 
   def solve(startPosition: Vector, inputFile: String)(implicit keypad: Keypad) =
     Source.fromURL(getClass.getResource(inputFile)).map {
