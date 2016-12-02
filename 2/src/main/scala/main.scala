@@ -26,22 +26,16 @@ object Two {
       }
     }
     def press = State(position, code :+ value)
-    def apply(o: Operation) = o.apply(this)
+    def apply(t: (State) => State) = t(this)
   }
 
-  trait Operation {
-    def apply(s: State): State
-  }
-  case class MoveOperation(v: Vector) extends Operation {
-    def apply(s: State) = s.move(v)
-  }
-  val up = MoveOperation(Vector(0, -1))
-  val left = MoveOperation(Vector(-1, 0))
-  val down = MoveOperation(Vector(0, 1))
-  val right = MoveOperation(Vector(1, 0))
-  object press extends Operation {
-    def apply(s: State) = s.press
-  }
+  def move(v: Vector)(s: State) = s.move(v)
+  val up = move(Vector(0, -1))(_)
+  val left = move(Vector(-1, 0))(_)
+  val down = move(Vector(0, 1))(_)
+  val right = move(Vector(1, 0))(_)
+
+  def press(s: State) = s.press
 
   def solve(startPosition: Vector, inputFile: String)(implicit keypad: Keypad) =
     Source.fromURL(getClass.getResource(inputFile)).map {
@@ -49,13 +43,13 @@ object Two {
       case 'D' => down
       case 'L' => left
       case 'R' => right
-      case '\n' => press
-    }.foldLeft(State(startPosition))(_.apply(_)).code.mkString
+      case '\n' => press(_)
+    }.foldLeft(State(startPosition))(_ apply _).code.mkString
 
   def solveOne(inputFile: String): String = {
     solve(Vector(1, 1), inputFile)(
       Keypad("""123
-               |345
+               |456
                |789"""))
   }
 
