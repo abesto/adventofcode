@@ -55,8 +55,8 @@ object Two {
   def solveOne(inputFile: String): String = {
     solve(Vector(1, 1), inputFile)(
       Keypad("""123
-            |345
-            |789"""))
+               |345
+               |789"""))
   }
 
   def solveTwo(inputFile: String): String = {
