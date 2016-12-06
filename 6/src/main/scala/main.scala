@@ -8,7 +8,7 @@ object Main {
     println(Source.fromURL(getClass.getResource(inputFile)).getLines
               .foldLeft(Map[Int, Map[Char, Int]]().withDefaultValue(Map().withDefaultValue(0)))(
               (m, line) => line.view.zipWithIndex.foldLeft(m)((m, c) => m + ((c._2, (m(c._2) + ((c._1, m(c._2)(c._1) + 1)))))))  // muhahaha
-              .toSeq.sortBy(x => x._1).map(x => x._2.maxBy(selectBy)._1).mkString  // MUHAHAHAHA
+              .toSeq.sortBy(_._1).map(_._2.maxBy(selectBy)._1).mkString  // MUHAHAHAHA
     )
   }
 
