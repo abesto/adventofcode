@@ -1,4 +1,5 @@
 import scala.io.Source
+import scala.util.Random
 import com.twmacinta.util.MD5
 
 object Main {
@@ -10,7 +11,7 @@ object Main {
     acc
   } else {
     if (iteration % 10000 == 0) {
-      println(s"${iteration}\t${doorId}\t${iteration}\t${doorId + iteration.toString}\t${md5String(doorId + iteration.toString)}\t${acc}")
+      print(s"\r${iteration}\t${doorId}\t${iteration}\t${doorId + iteration.toString}\t${md5String(doorId + iteration.toString)}\t${acc}")
     }
     md5String(doorId + iteration.toString) match {
       case hash if hash.startsWith("00000") => passwordOne(doorId, iteration + 1, acc + hash(5))
@@ -19,7 +20,7 @@ object Main {
   }
 
   def solveOne(doorId: String) {
-    println(s"${doorId}: ${passwordOne(doorId)}")
+    println(s"\r${doorId}: ${passwordOne(doorId)}")
   }
 
   def passwordTwo(doorId: String, iteration: Long = 0, acc: Array[Option[Char]] = Array(None, None, None, None, None, None, None, None)): Array[Option[Char]] =
@@ -27,8 +28,8 @@ object Main {
       acc
     } else {
       if (iteration % 10000 == 0) {
-        val pwd = acc.map(_.getOrElse('_')).mkString
-        println(s"${iteration}\t${doorId}\t${iteration}\t${doorId + iteration.toString}\t${md5String(doorId + iteration.toString)}\t${pwd}")
+        val pwd = acc.map(_.getOrElse((Random.nextInt('z' - '0') + '0').toChar)).mkString
+        print(s"\r${iteration}\t${doorId}\t${iteration}\t${doorId + iteration.toString}\t${md5String(doorId + iteration.toString)}\t${pwd}")
       }
       md5String(doorId + iteration.toString) match {
         case hash if hash.startsWith("00000") && hash(5).isDigit && hash(5) < '8' && acc(hash(5) - '0').isEmpty =>
@@ -40,7 +41,7 @@ object Main {
     }
 
   def solveTwo(doorId: String) {
-    println(s"${doorId}: ${passwordTwo(doorId).map(_.get).mkString}")
+    println(s"\r${doorId}: ${passwordTwo(doorId).map(_.get).mkString}")
   }
 
   def main(args: Array[String]) {
