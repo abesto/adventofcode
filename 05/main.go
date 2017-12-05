@@ -21,7 +21,7 @@ func decreaseThreeOrAboveOrIncrease(x int) int {
 }
 
 func solve(filename string, mutate mutate) {
-	fmt.Printf("Solving part one for %s: ", filename)
+	fmt.Printf("Solving for %s: ", filename)
 	reader, err := os.Open(filename)
 	if err != nil {
 		panic(err)
